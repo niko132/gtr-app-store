@@ -18,7 +18,7 @@ app.get('/search', function(request, response, next) {
 		queryName = queryParams.name;
 	}
 	
-	pgClient.query("SELECT (name) FROM apps WHERE name ~* \'$1::text\'", ['Te'], (err, res) => {
+	pgClient.query("SELECT (name) FROM apps WHERE name ~* $1::text", ['Te'], (err, res) => {
 		console.log('Error: ' + err);
 		console.log('Query: ' + res.rows.length);
 		
