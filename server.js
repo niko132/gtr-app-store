@@ -18,11 +18,11 @@ app.get('/search', function(request, response, next) {
 		queryName = queryParams.name;
 	}
 	
-	pgClient.query("SELECT * FROM apps", (err, res) => {
+	pgClient.query("SELECT (name) FROM apps", (err, res) => {
 		console.log('Query: ' + res.rows.length);
 		
 		response.status(200);
-		response.send('Searching ' + queryName);
+		response.send(JSON.stringify(res));
 		next();
 	});
 });
