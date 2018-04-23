@@ -25,7 +25,7 @@ app.get('/search', function(request, response, next) {
 		var aaa = '';
 		
 		for (var i = 0; i < res.rowCount; i++) {
-			aaa += res.rows[i]['id'] + ' ' + res.rows[i]['name'];
+			aaa += res.rows[i];
 		}
 		
 		response.status(200);
