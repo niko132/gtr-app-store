@@ -25,7 +25,7 @@ app.get('/search', function(request, response, next) {
 		var aaa = '';
 		
 		for (var i = 0; i < res.rowCount; i++) {
-			aaa += res.rows[i];
+			aaa += JSON.stringify(res.rows[i]);
 		}
 		
 		response.status(200);
