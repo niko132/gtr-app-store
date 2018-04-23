@@ -9,9 +9,9 @@ const pgClient = new Client({
 var port = process.env.PORT || 8080;
 pgClient.connect();
 
-app.get('/search', function(req, res, next) {
-	console.log('Search Request: ' + JSON.stringify(req.query));
-	var queryParams = req.query;
+app.get('/search', function(request, response, next) {
+	console.log('Search Request: ' + JSON.stringify(request.query));
+	var queryParams = request.query;
 	var queryName = '';
 	
 	if (queryParams.hasOwnProperty('name')) {
@@ -21,8 +21,8 @@ app.get('/search', function(req, res, next) {
 	pgClient.query("SELECT * FROM apps", (err, res) => {
 		console.log('Query: ' + res.rows.length);
 		
-		res.status(200);
-		res.send('Searching ' + queryName);
+		response.status(200);
+		response.send('Searching ' + queryName);
 		next();
 	});
 });
