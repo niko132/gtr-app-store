@@ -22,8 +22,14 @@ app.get('/search', function(request, response, next) {
 		console.log('Error: ' + err);
 		console.log('Query: ' + res.rows.length);
 		
+		var aaa = '';
+		
+		for (var i = 0; i < res.rowCount; i++) {
+			aaa += res.rows[i]['id'] + ' ' + res.rows[i]['name'];
+		}
+		
 		response.status(200);
-		response.send(JSON.stringify(res));
+		response.send(aaa);
 		next();
 	});
 });
