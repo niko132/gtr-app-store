@@ -22,7 +22,7 @@ app.get('/search', function(request, response, next) {
 		console.log('Query: ' + res.rows.length);
 		
 		response.status(200);
-		response.send(JSON.stringify(res));
+		response.send(JSON.stringify(res.rows));
 		next();
 	});
 });
