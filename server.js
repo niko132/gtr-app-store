@@ -39,10 +39,22 @@ app.use('/apps/:id', function(request, response, next) {
 	var queryParams = request.query;
 	var dl = queryParams.hasOwnProperty('dl') && parseBool(queryParams.dl);
 	
-	console.log('Download: ' + dl);
-	
-	response.send('Hello World!');
-	next();
+	if (dl) { // Datei zurückgeben
+		response.send('Hello World!');
+		next();
+	} else { // Dateiinfo
+		pgClient.query("SELECT id, name FROM apps WHERE id == $1::integer", [id], (err, res) => {		
+			var aaa = '';
+		
+			for (var i = 0; i < res.rowCount; i++) {
+				aaa += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\t' + res.rows[i]['author'] + '\n';
+			}
+		
+			response.status(200);
+			response.send(aaa);
+			next();
+		});
+	}
 });
 
 app.listen(port, function() {
