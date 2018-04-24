@@ -1,3 +1,4 @@
+require('isomorphic-fetch'); // or another library of choice.
 var express = require('express');
 var {Client} = require('pg');
 
@@ -5,9 +6,11 @@ var app = express();
 const pgClient = new Client({
 	connectionString: process.env.DATABASE_URL,
 });
+var Dropbox = require('dropbox').Dropbox;
 
 var port = process.env.PORT || 8080;
 pgClient.connect();
+var dbx = new Dropbox({ accessToken: 'uqWT_e29s8AAAAAAAAAABywpTd7Debim2zbE2fC1TjK8YYpkg13FpUKtIHsfZ-rr' });
 
 app.get('/search', function(request, response, next) {
 	console.log('Search Request: ' + JSON.stringify(request.query));
@@ -47,10 +50,27 @@ app.use('/apps/:id', function(request, response, next) {
 	var dl = queryParams.hasOwnProperty('dl') && parseBool(queryParams.dl);
 	
 	if (dl) { // Datei zurückgeben
-		response.send('Hello World!');
-		next();
+		dbx.filesListFolder({path: '/apps/' + urlId})
+			.then(function(res) {
+				if (res.entries.length > 0) {
+					dbx.filesDownload({ path: res.entries[0].path_display })
+						.then(function(data) {
+							console.log('hay ' + data.fileBinary.toString('utf8'));
+							response.send(data.fileBinary);
+							next();
+						})
+						.catch(function(err) {
+							console.log('nay: ' + JSON.stringify(err));
+							next();
+						});
+				}
+			})
+			.catch(function(error) {
+				console.log(error);
+				next();
+			});
 	} else { // Dateiinfo
-		pgClient.query("SELECT id, name, author FROM apps WHERE id = $1::integer", [urlId], (err, res) => {		
+		pgClient.query("SELECT id, name, author FROM apps WHERE id = $1::integer LIMIT 1", [urlId], (err, res) => {		
 			if (res.rowCount <= 0) {
 				response.status(400);
 				response.send('id nicht gefunden');
@@ -58,11 +78,7 @@ app.use('/apps/:id', function(request, response, next) {
 				return;
 			}
 			
-			var resText = '';
-		
-			for (var i = 0; i < res.rowCount; i++) {
-				resText += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\t' + res.rows[i]['author'] + '\n';
-			}
+			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + '\n';
 		
 			response.status(200);
 			response.send(resText);
