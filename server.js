@@ -18,10 +18,7 @@ app.get('/search', function(request, response, next) {
 		queryName = queryParams.name;
 	}
 	
-	pgClient.query("SELECT id, name FROM apps WHERE name ~* $1::text", [queryName], (err, res) => {
-		console.log('Error: ' + err);
-		console.log('Query: ' + res.rows.length);
-		
+	pgClient.query("SELECT id, name FROM apps WHERE name ~* $1::text", [queryName], (err, res) => {		
 		var aaa = '';
 		
 		for (var i = 0; i < res.rowCount; i++) {
@@ -34,8 +31,9 @@ app.get('/search', function(request, response, next) {
 	});
 });
 
-app.use('/apps/', function(req, res, next) {
+app.use('/apps/:id', function(req, res, next) {
 	console.log('Request to ' + req.url);
+	console.log(req.params.id);
 	res.send('Hello World!');
 	next();
 });
