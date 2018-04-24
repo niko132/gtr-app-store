@@ -43,7 +43,7 @@ app.use('/apps/:id', function(request, response, next) {
 		response.send('Hello World!');
 		next();
 	} else { // Dateiinfo
-		pgClient.query("SELECT id, name FROM apps WHERE id == $1::integer", [id], (err, res) => {		
+		pgClient.query("SELECT id, name, author FROM apps WHERE id == $1::integer", [id], (err, res) => {		
 			var aaa = '';
 		
 			for (var i = 0; i < res.rowCount; i++) {
