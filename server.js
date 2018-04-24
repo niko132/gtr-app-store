@@ -56,7 +56,7 @@ app.use('/apps/:id', function(request, response, next) {
 			}
 		
 			response.status(200);
-			response.send('hallo');
+			response.send(aaa);
 			next();
 		});
 	}
