@@ -36,6 +36,11 @@ app.use('/apps/:id', function(request, response, next) {
 	console.log(request.params.id);
 	var urlId = request.params.id;
 	
+	if (isNaN(urlId)) {
+		response.status(400);
+		return;
+	}
+	
 	var queryParams = request.query;
 	var dl = queryParams.hasOwnProperty('dl') && parseBool(queryParams.dl);
 	
@@ -45,8 +50,6 @@ app.use('/apps/:id', function(request, response, next) {
 	} else { // Dateiinfo
 		pgClient.query("SELECT id, name, author FROM apps WHERE id = $1::integer", [urlId], (err, res) => {		
 			var aaa = '';
-			
-			console.log(err.stack);
 		
 			for (var i = 0; i < res.rowCount; i++) {
 				aaa += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\t' + res.rows[i]['author'] + '\n';
