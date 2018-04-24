@@ -32,8 +32,8 @@ app.get('/search', function(request, response, next) {
 });
 
 app.use('/apps/:id', function(request, response, next) {
-	console.log('Request to ' + req.url);
-	console.log(req.params.id);
+	console.log('Request to ' + request.url);
+	console.log(request.params.id);
 	var urlId = request.params.id;
 	
 	var queryParams = request.query;
@@ -41,7 +41,7 @@ app.use('/apps/:id', function(request, response, next) {
 	
 	console.log('Download: ' + dl);
 	
-	res.send('Hello World!');
+	response.send('Hello World!');
 	next();
 });
 
