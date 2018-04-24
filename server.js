@@ -31,9 +31,16 @@ app.get('/search', function(request, response, next) {
 	});
 });
 
-app.use('/apps/:id', function(req, res, next) {
+app.use('/apps/:id', function(request, response, next) {
 	console.log('Request to ' + req.url);
 	console.log(req.params.id);
+	var urlId = request.params.id;
+	
+	var queryParams = request.query;
+	var dl = queryParams.hasOwnProperty('dl') && queryParams.dl;
+	
+	console.log('Download: ' + dl);
+	
 	res.send('Hello World!');
 	next();
 });
