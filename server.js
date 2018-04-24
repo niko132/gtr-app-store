@@ -37,7 +37,7 @@ app.use('/apps/:id', function(request, response, next) {
 	var urlId = request.params.id;
 	
 	var queryParams = request.query;
-	var dl = queryParams.hasOwnProperty('dl') && Boolean(JSON.parse(queryParams.dl.toLowerCase()));
+	var dl = queryParams.hasOwnProperty('dl') && parseBool(queryParams.dl);
 	
 	console.log('Download: ' + dl);
 	
@@ -48,3 +48,10 @@ app.use('/apps/:id', function(request, response, next) {
 app.listen(port, function() {
 	console.log('Example app listening on port ' + port);
 });
+
+var parseBool = function(str) {
+	if (typeof str === 'string' && str.toLowerCase() == 'true')
+		return true;
+	
+	return (parseInt(str) > 0);
+}
