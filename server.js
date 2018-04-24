@@ -43,7 +43,7 @@ app.use('/apps/:id', function(request, response, next) {
 		response.send('Hello World!');
 		next();
 	} else { // Dateiinfo
-		pgClient.query("SELECT id, name, author FROM apps WHERE id == $1::text", [urlId], (err, res) => {		
+		pgClient.query("SELECT id, name, author FROM apps WHERE id = $1::integer", [urlId], (err, res) => {		
 			var aaa = '';
 			
 			console.log(err.stack);
