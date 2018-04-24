@@ -37,7 +37,7 @@ app.use('/apps/:id', function(request, response, next) {
 	var urlId = request.params.id;
 	
 	var queryParams = request.query;
-	var dl = queryParams.hasOwnProperty('dl') && queryParams.dl;
+	var dl = queryParams.hasOwnProperty('dl') && Boolean(JSON.parse(queryParams.dl));
 	
 	console.log('Download: ' + dl);
 	
