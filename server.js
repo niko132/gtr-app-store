@@ -19,14 +19,14 @@ app.get('/search', function(request, response, next) {
 	}
 	
 	pgClient.query("SELECT id, name FROM apps WHERE name ~* $1::text", [queryName], (err, res) => {		
-		var aaa = '';
+		var resText = '';
 		
 		for (var i = 0; i < res.rowCount; i++) {
-			aaa += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\n';
+			resText += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\n';
 		}
 		
 		response.status(200);
-		response.send(aaa);
+		response.send(resText);
 		next();
 	});
 });
@@ -38,6 +38,8 @@ app.use('/apps/:id', function(request, response, next) {
 	
 	if (isNaN(urlId)) {
 		response.status(400);
+		response.send('falsches id format');
+		next();
 		return;
 	}
 	
@@ -49,14 +51,21 @@ app.use('/apps/:id', function(request, response, next) {
 		next();
 	} else { // Dateiinfo
 		pgClient.query("SELECT id, name, author FROM apps WHERE id = $1::integer", [urlId], (err, res) => {		
-			var aaa = '';
+			if (res.rowCount <= 0) {
+				response.status(400);
+				response.send('id nicht gefunden');
+				next();
+				return;
+			}
+			
+			var resText = '';
 		
 			for (var i = 0; i < res.rowCount; i++) {
-				aaa += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\t' + res.rows[i]['author'] + '\n';
+				resText += res.rows[i]['id'] + '\t' + res.rows[i]['name'] + '\t' + res.rows[i]['author'] + '\n';
 			}
 		
 			response.status(200);
-			response.send(aaa);
+			response.send(resText);
 			next();
 		});
 	}
