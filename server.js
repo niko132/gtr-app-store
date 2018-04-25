@@ -55,7 +55,6 @@ app.use('/apps/:id', function(request, response, next) {
 				if (res.entries.length > 0) {
 					dbx.filesDownload({ path: res.entries[0].path_display })
 						.then(function(data) {
-							console.log('hay ' + data.name + ' ' + data.fileBinary.toString('utf8'));
 							response.attachment(data.name);
 							response.send(data.fileBinary);
 							next();
@@ -71,7 +70,7 @@ app.use('/apps/:id', function(request, response, next) {
 				next();
 			});
 	} else { // Dateiinfo
-		pgClient.query("SELECT id, name, author FROM apps WHERE id = $1::integer LIMIT 1", [urlId], (err, res) => {		
+		pgClient.query("SELECT id, name, author, path FROM apps WHERE id = $1::integer LIMIT 1", [urlId], (err, res) => {		
 			if (res.rowCount <= 0) {
 				response.status(400);
 				response.send('id nicht gefunden');
@@ -79,7 +78,7 @@ app.use('/apps/:id', function(request, response, next) {
 				return;
 			}
 			
-			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + '\n';
+			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + res.rows[0]['path'] + '\n';
 		
 			response.status(200);
 			response.send(resText);
