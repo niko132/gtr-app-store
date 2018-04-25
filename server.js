@@ -95,7 +95,9 @@ app.use('/apps/:id', function(request, response, next) {
 });
 
 app.post('/upload', function(request, response, next) {
-	
+	response.status(200);
+	response.send('Upload successfull');
+	next();
 });
 
 app.listen(port, function() {
