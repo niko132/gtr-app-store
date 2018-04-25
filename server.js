@@ -8,9 +8,11 @@ const pgClient = new Client({
 });
 var Dropbox = require('dropbox').Dropbox;
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 80;
 pgClient.connect();
 var dbx = new Dropbox({ accessToken: 'uqWT_e29s8AAAAAAAAAABywpTd7Debim2zbE2fC1TjK8YYpkg13FpUKtIHsfZ-rr' });
+
+app.use(express.static('public'));
 
 app.get('/search', function(request, response, next) {
 	console.log('Search Request: ' + JSON.stringify(request.query));
@@ -55,18 +57,23 @@ app.use('/apps/:id', function(request, response, next) {
 				if (res.entries.length > 0) {
 					dbx.filesDownload({ path: res.entries[0].path_display })
 						.then(function(data) {
+							response.status(200);
 							response.attachment(data.name);
 							response.send(data.fileBinary);
 							next();
 						})
 						.catch(function(err) {
-							console.log('nay: ' + JSON.stringify(err));
+							console.log('Dropbox Download Error: ' + JSON.stringify(err));
 							next();
 						});
+				} else {
+					response.status(200);
+					response.send('id nicht gefunden');
+					next();
 				}
 			})
-			.catch(function(error) {
-				console.log(error);
+			.catch(function(err) {
+				console.log('Dropbox List Error: ' + error);
 				next();
 			});
 	} else { // Dateiinfo
@@ -85,6 +92,10 @@ app.use('/apps/:id', function(request, response, next) {
 			next();
 		});
 	}
+});
+
+app.post('/upload', function(request, response, next) {
+	
 });
 
 app.listen(port, function() {
