@@ -55,7 +55,8 @@ app.use('/apps/:id', function(request, response, next) {
 				if (res.entries.length > 0) {
 					dbx.filesDownload({ path: res.entries[0].path_display })
 						.then(function(data) {
-							console.log('hay ' + data.fileBinary.toString('utf8'));
+							console.log('hay ' + data.name + ' ' + data.fileBinary.toString('utf8'));
+							response.attachment(data.name);
 							response.send(data.fileBinary);
 							next();
 						})
