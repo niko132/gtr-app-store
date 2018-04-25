@@ -78,7 +78,7 @@ app.use('/apps/:id', function(request, response, next) {
 				return;
 			}
 			
-			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + res.rows[0]['path'] + '\n';
+			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + '\t' + res.rows[0]['path'] + '\n';
 		
 			response.status(200);
 			response.send(resText);
