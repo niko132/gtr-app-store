@@ -73,7 +73,7 @@ app.use('/apps/:id', function(request, response, next) {
 				}
 			})
 			.catch(function(err) {
-				console.log('Dropbox List Error: ' + error);
+				console.log('Dropbox List Error: ' + err);
 				next();
 			});
 	} else { // Dateiinfo
