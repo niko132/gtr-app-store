@@ -77,7 +77,7 @@ app.use('/apps/:id', function(request, response, next) {
 				next();
 			});
 	} else { // Dateiinfo
-		pgClient.query("SELECT id, name, author, image_url, file_url FROM apps WHERE id = $1::integer LIMIT 1", [urlId], (err, res) => {		
+		pgClient.query("SELECT id, name, author, description, upload_date, file_path, image_url, file_url FROM apps WHERE id = $1::integer LIMIT 1", [urlId], (err, res) => {		
 			if (res.rowCount <= 0) {
 				response.status(400);
 				response.send('id nicht gefunden');
@@ -85,7 +85,7 @@ app.use('/apps/:id', function(request, response, next) {
 				return;
 			}
 			
-			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + '\t' + res.rows[0]['image_url'] + '\t' + res.rows[0]['file_url'] + '\n';
+			var resText = res.rows[0]['id'] + '\t' + res.rows[0]['name'] + '\t' + res.rows[0]['author'] + '\t' + res.rows[0]['description'] + '\t' + res.rows[0]['upload_date'] + '\t' + res.rows[0]['file_path'] + '\t' + res.rows[0]['image_url'] + '\t' + res.rows[0]['file_url'] + '\n';
 		
 			response.status(200);
 			response.send(resText);
